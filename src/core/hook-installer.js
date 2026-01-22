@@ -23,7 +23,7 @@ export class HookInstaller {
       // Check if hook already exists
       if (existsSync(this.hookPath) && !force) {
         const existing = readFileSync(this.hookPath, 'utf-8');
-        if (existing.includes('branch-guard')) {
+        if (existing.includes('branchguard')) {
           return true; // Already installed
         }
       }
@@ -56,7 +56,7 @@ export class HookInstaller {
       }
 
       const content = readFileSync(this.hookPath, 'utf-8');
-      return content.includes('branch-guard');
+      return content.includes('branchguard');
     } catch {
       return false;
     }
@@ -70,10 +70,10 @@ export class HookInstaller {
     try {
       if (existsSync(this.hookPath)) {
         const content = readFileSync(this.hookPath, 'utf-8');
-        if (content.includes('branch-guard')) {
-          // Remove file if it only contains branch-guard
+        if (content.includes('branchguard')) {
+          // Remove file if it only contains branchguard
           const lines = content.split('\n').filter(line => 
-            !line.includes('branch-guard') && line.trim() !== ''
+            !line.includes('branchguard') && line.trim() !== ''
           );
           
           if (lines.length <= 1) {
@@ -95,11 +95,11 @@ export class HookInstaller {
    */
   generateHookContent() {
     return `#!/bin/sh
-# branch-guard pre-checkout hook
+# branchguard pre-checkout hook
 # Prevents dangerous branch switches that could lead to merge conflicts
 
 # Allow bypass with environment variable
-if [ -n "$BRANCH_GUARD_BYPASS" ]; then
+if [ -n "$BRANCHGUARD_BYPASS" ]; then
   exit 0
 fi
 
@@ -108,8 +108,8 @@ if [ -n "$CI" ] || [ -n "$CONTINUOUS_INTEGRATION" ]; then
   exit 0
 fi
 
-# Run branch-guard check
-npx --no-install branch-guard check "$1" "$2" || exit 1
+# Run branchguard check
+npx --no-install branchguard check "$1" "$2" || exit 1
 `;
   }
 }

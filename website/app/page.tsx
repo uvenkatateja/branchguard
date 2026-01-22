@@ -11,9 +11,9 @@ export default function Home() {
       <header className="container mx-auto px-4 py-6 flex justify-between items-center">
         <div className="flex items-center gap-2">
           <Shield className="h-8 w-8" />
-          <span className="text-2xl font-bold">branch-guard</span>
+          <span className="text-2xl font-bold">branchguard</span>
         </div>
-        <a href="https://github.com/yourusername/branch-guard" target="_blank" rel="noopener noreferrer">
+        <a href="https://github.com/uvenkatateja/branchguard" target="_blank" rel="noopener noreferrer">
           <Button variant="outline" size="sm">
             <Github className="mr-2 h-4 w-4" />
             GitHub
@@ -39,7 +39,7 @@ export default function Home() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
           <Button size="lg" className="text-lg px-8">
             <Terminal className="mr-2 h-5 w-5" />
-            npx branch-guard init
+            npx branchguard init
           </Button>
           <Button size="lg" variant="outline" className="text-lg px-8">
             View Docs
@@ -60,7 +60,7 @@ export default function Home() {
               <div className="text-yellow-400 mt-2">💡 Recommendation:</div>
               <div className="text-slate-500 ml-4">git pull origin main</div>
               <div className="text-slate-500 ml-4">git rebase main</div>
-              <div className="text-slate-400 mt-4">$ npx branch-guard sync</div>
+              <div className="text-slate-400 mt-4">$ npx branchguard sync</div>
               <div className="flex items-center gap-2 text-green-400 mt-2">
                 <CheckCircle2 className="h-4 w-4" />
                 <span>✅ Branch synced successfully!</span>
@@ -141,21 +141,21 @@ export default function Home() {
           <div className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle className="font-mono text-lg">branch-guard init</CardTitle>
+                <CardTitle className="font-mono text-lg">branchguard init</CardTitle>
                 <CardDescription>Install once, protected forever</CardDescription>
               </CardHeader>
             </Card>
 
             <Card>
               <CardHeader>
-                <CardTitle className="font-mono text-lg">branch-guard safe &lt;branch&gt;</CardTitle>
+                <CardTitle className="font-mono text-lg">branchguard safe &lt;branch&gt;</CardTitle>
                 <CardDescription>Check if switching to a branch is safe</CardDescription>
               </CardHeader>
             </Card>
 
             <Card>
               <CardHeader>
-                <CardTitle className="font-mono text-lg">branch-guard sync</CardTitle>
+                <CardTitle className="font-mono text-lg">branchguard sync</CardTitle>
                 <CardDescription>Auto-rebase current branch with main</CardDescription>
               </CardHeader>
             </Card>
@@ -198,7 +198,7 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
               <Button size="lg" variant="secondary" className="text-lg px-8">
                 <Terminal className="mr-2 h-5 w-5" />
-                npm install -g branch-guard
+                npm install -g branchguard
               </Button>
             </div>
           </CardHeader>

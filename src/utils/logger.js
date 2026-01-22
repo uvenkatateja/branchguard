@@ -1,6 +1,10 @@
 import chalk from 'chalk';
 
 class Logger {
+  constructor() {
+    this.chalk = chalk; // Expose chalk for direct use
+  }
+
   /**
    * Log info message
    * @param {...any} args - Message arguments

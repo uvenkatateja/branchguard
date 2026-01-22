@@ -5,7 +5,7 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'branch-guard - Prevent Merge Conflicts Before They Happen',
+  title: 'branchguard - Prevent Merge Conflicts Before They Happen',
   description: 'Single npm command that blocks dangerous git checkouts when branches have diverged too much.',
 }
 

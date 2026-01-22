@@ -1,4 +1,4 @@
-# 🛡️ branch-guard
+# 🛡️ branchguard
 
 **Prevent merge conflicts before they happen.**
 
@@ -17,65 +17,65 @@ $ git merge feature/login              # 💥 15+ files conflict hell (2hrs wast
 ## The Solution
 
 ```bash
-npx branch-guard init          # Install once, protected forever
+npx branchguard init          # Install once, protected forever
 
-git checkout main              # ❌ Blocked: "main 47 commits ahead!"
-branch-guard safe main         # ✅ Check before switching
-branch-guard sync              # Auto-rebase to fix divergence
+git checkout main             # ❌ Blocked: "main 47 commits ahead!"
+branchguard safe main         # ✅ Check before switching
+branchguard sync              # Auto-rebase to fix divergence
 ```
 
 ## Installation
 
 ```bash
-npm install -g branch-guard
+npm install -g branchguard
 ```
 
 Or use directly with npx:
 
 ```bash
-npx branch-guard init
+npx branchguard init
 ```
 
 ## Commands
 
-### `branch-guard init`
+### `branchguard init`
 
 Install the pre-checkout hook to protect your repository.
 
 ```bash
-branch-guard init
-branch-guard init --threshold 20    # Custom threshold
-branch-guard init --force           # Force reinstall
+branchguard init
+branchguard init --threshold 20    # Custom threshold
+branchguard init --force           # Force reinstall
 ```
 
-### `branch-guard status`
+### `branchguard status`
 
 Show current protection status and configuration.
 
 ```bash
-branch-guard status
+branchguard status
 ```
 
-### `branch-guard safe <branch>`
+### `branchguard safe <branch>`
 
 Check if switching to a branch is safe without actually switching.
 
 ```bash
-branch-guard safe main
-branch-guard safe feature/new-feature
+branchguard safe main
+branchguard safe feature/new-feature
 ```
 
-### `branch-guard sync`
+### `branchguard sync`
 
 Auto-sync current branch with base branch (default: main).
 
 ```bash
-branch-guard sync
-branch-guard sync --base develop    # Sync with develop
-branch-guard sync --no-stash        # Don't stash changes
+branchguard sync
+branchguard sync --base develop    # Sync with develop
+branchguard sync --no-stash        # Don't stash changes
 ```
 
-### `branch-guard check <from> <to>`
+### `branchguard check <from> <to>`
 
 Internal command used by Git hook. You typically don't run this manually.
 
@@ -95,7 +95,7 @@ Provides exact commands to fix divergence or auto-sync with one command.
 
 ## Configuration
 
-Configuration is stored in `.git/branch-guard/config.json`:
+Configuration is stored in `.git/branchguard/config.json`:
 
 ```json
 {
@@ -112,7 +112,7 @@ You can modify these values by editing the file or using the init command.
 When you need to force a switch:
 
 ```bash
-BRANCH_GUARD_BYPASS=1 git checkout <branch>
+BRANCHGUARD_BYPASS=1 git checkout <branch>
 ```
 
 The hook is automatically disabled in CI environments (when `CI` or `CONTINUOUS_INTEGRATION` env vars are set).
@@ -161,7 +161,7 @@ npm run build
 ```bash
 npm link
 cd /path/to/test/repo
-branch-guard init
+branchguard init
 ```
 
 ### Publish
@@ -170,7 +170,7 @@ branch-guard init
 npm publish --access public
 ```
 
-## Why branch-guard?
+## Why branchguard?
 
 - ✅ **Proactive**: Prevents conflicts before they happen
 - ✅ **Invisible**: Works automatically via Git hooks

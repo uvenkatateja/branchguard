@@ -6,9 +6,7 @@ import { spinner } from '../utils/spinner.js';
 import { showBanner } from '../utils/banner.js';
 
 export async function initCommand(options) {
-  showBanner();
-  
-  const spin = spinner('Initializing branch-guard...');
+  const spin = spinner('Initializing branchguard...');
   
   try {
     // Verify we're in a Git repository
@@ -35,14 +33,17 @@ export async function initCommand(options) {
     await configManager.set('threshold', parseInt(options.threshold, 10));
     await configManager.set('enabled', true);
 
-    spin.succeed('branch-guard initialized successfully!');
+    spin.succeed('branchguard initialized successfully!');
     
     logger.info('');
-    logger.success('✓ Pre-checkout hook installed');
-    logger.success(`✓ Divergence threshold set to ${options.threshold} commits`);
+    console.log(logger.chalk.dim('│'));
+    logger.success(`${logger.chalk.dim('○')} Pre-checkout hook installed`);
+    console.log(logger.chalk.dim('│'));
+    logger.success(`${logger.chalk.dim('○')} Divergence threshold set to ${options.threshold} commits`);
+    console.log(logger.chalk.dim('│'));
     logger.info('');
     logger.dim('Your repository is now protected from dangerous branch switches.');
-    logger.dim('To bypass protection: BRANCH_GUARD_BYPASS=1 git checkout <branch>');
+    logger.dim('To bypass protection: BRANCHGUARD_BYPASS=1 git checkout <branch>');
     
   } catch (error) {
     spin.fail('Initialization failed');

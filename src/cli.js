@@ -1,163 +1,65 @@
 #!/usr/bin/env node
-import simpleGit from 'simple-git';
-import chalk from 'chalk';
-import ora from 'ora';
 import { program } from 'commander';
-import { writeFileSync, chmodSync, existsSync, mkdirSync } from 'fs';
-import { join } from 'path';
+import { initCommand } from './commands/init.js';
+import { checkCommand } from './commands/check.js';
+import { safeCommand } from './commands/safe.js';
+import { syncCommand } from './commands/sync.js';
+import { statusCommand } from './commands/status.js';
+import { logger } from './utils/logger.js';
+import { version } from './utils/version.js';
+import { showBanner } from './utils/banner.js';
 
-const git = simpleGit();
-const THRESHOLD = 10;
+// Show banner for main commands (not for check which is used by hooks, or version/help)
+const command = process.argv[2];
+const shouldShowBanner = command && !['check', '--version', '-V', '--help', '-h'].includes(command);
 
-async function checkDivergence(base, target) {
-  try {
-    await git.fetch();
-    const log = await git.raw(['rev-list', '--left-right', '--count', `${base}...${target}`]);
-    const [behind, ahead] = log.trim().split('\t').map(Number);
-    return { behind, ahead, total: behind + ahead };
-  } catch (error) {
-    return { behind: 0, ahead: 0, total: 0, error: error.message };
-  }
-}
-
-async function getCurrentBranch() {
-  const status = await git.status();
-  return status.current;
-}
-
-async function installHook() {
-  const spinner = ora('Installing pre-checkout hook...').start();
-  
-  try {
-    const hooksDir = '.git/hooks';
-    if (!existsSync(hooksDir)) {
-      mkdirSync(hooksDir, { recursive: true });
-    }
-
-    const hookPath = join(hooksDir, 'pre-checkout');
-    const hookContent = `#!/bin/sh
-# branch-guard pre-checkout hook
-if [ -n "$BRANCH_GUARD_BYPASS" ]; then
-  exit 0
-fi
-
-npx branch-guard check "$1" "$2" || exit 1
-`;
-
-    writeFileSync(hookPath, hookContent, { mode: 0o755 });
-    
-    if (process.platform !== 'win32') {
-      chmodSync(hookPath, 0o755);
-    }
-
-    spinner.succeed(chalk.green('✅ Pre-checkout hook installed successfully!'));
-    console.log(chalk.dim('\nNow protected from dangerous branch switches.'));
-    console.log(chalk.dim('To bypass: BRANCH_GUARD_BYPASS=1 git checkout <branch>'));
-  } catch (error) {
-    spinner.fail(chalk.red('Failed to install hook'));
-    console.error(error.message);
-    process.exit(1);
-  }
-}
-
-async function checkSwitch(from, to) {
-  if (!from || !to) {
-    process.exit(0);
-  }
-
-  const spinner = ora(`Checking divergence between ${from} and ${to}...`).start();
-  
-  const div = await checkDivergence(from, to);
-  
-  if (div.error) {
-    spinner.warn(chalk.yellow('⚠️  Could not check divergence'));
-    process.exit(0);
-  }
-
-  if (div.total > THRESHOLD) {
-    spinner.fail(chalk.red(`❌ Blocked: ${to} has ${div.total} divergent commits!`));
-    console.log(chalk.yellow('\n💡 Recommendation:'));
-    console.log(chalk.dim(`   git pull origin ${to}`));
-    console.log(chalk.dim(`   git rebase ${to}`));
-    console.log(chalk.dim('\nOr run: npx branch-guard sync'));
-    process.exit(1);
-  }
-
-  spinner.succeed(chalk.green(`✅ Safe to switch (${div.total} divergent commits)`));
-  process.exit(0);
-}
-
-async function checkSafety(targetBranch) {
-  const current = await getCurrentBranch();
-  const div = await checkDivergence(current, targetBranch);
-
-  if (div.error) {
-    console.log(chalk.yellow(`⚠️  Could not check ${targetBranch}: ${div.error}`));
-    return;
-  }
-
-  if (div.total <= THRESHOLD) {
-    console.log(chalk.green(`✅ ${targetBranch} is safe (${div.total} divergent commits)`));
-  } else {
-    console.log(chalk.red(`❌ ${targetBranch} is unsafe (${div.total} divergent commits)`));
-    console.log(chalk.dim(`   Behind: ${div.behind}, Ahead: ${div.ahead}`));
-  }
-}
-
-async function syncBranch() {
-  const spinner = ora('Syncing branch...').start();
-  
-  try {
-    const current = await getCurrentBranch();
-    const status = await git.status();
-
-    if (status.files.length > 0) {
-      spinner.text = 'Stashing changes...';
-      await git.stash();
-    }
-
-    spinner.text = 'Fetching latest changes...';
-    await git.fetch();
-
-    spinner.text = 'Rebasing...';
-    await git.rebase(['origin/main']);
-
-    if (status.files.length > 0) {
-      spinner.text = 'Restoring stashed changes...';
-      await git.stash(['pop']);
-    }
-
-    spinner.succeed(chalk.green('✅ Branch synced successfully!'));
-  } catch (error) {
-    spinner.fail(chalk.red('Sync failed'));
-    console.error(chalk.dim(error.message));
-    process.exit(1);
-  }
+if (shouldShowBanner) {
+  showBanner();
 }
 
 program
-  .name('branch-guard')
+  .name('branchguard')
   .description('Prevent merge conflicts by blocking dangerous branch switches')
-  .version('1.0.0');
+  .version(version);
 
 program
   .command('init')
-  .description('Install pre-checkout hook')
-  .action(installHook);
+  .description('Install pre-checkout hook to protect your repository')
+  .option('-f, --force', 'Force reinstall hook')
+  .option('-t, --threshold <number>', 'Set divergence threshold (default: 10)', '10')
+  .action(initCommand);
 
 program
   .command('check <from> <to>')
-  .description('Check if branch switch is safe (used by hook)')
-  .action(checkSwitch);
+  .description('Check if branch switch is safe (used internally by Git hook)')
+  .action(checkCommand);
 
 program
   .command('safe <branch>')
-  .description('Check if switching to branch is safe')
-  .action(checkSafety);
+  .description('Check if switching to a branch is safe without actually switching')
+  .action(safeCommand);
 
 program
   .command('sync')
-  .description('Auto-sync current branch with main')
-  .action(syncBranch);
+  .description('Auto-sync current branch with base branch (default: main)')
+  .option('-b, --base <branch>', 'Base branch to sync with', 'main')
+  .option('--no-stash', 'Skip stashing changes')
+  .action(syncCommand);
+
+program
+  .command('status')
+  .description('Show branchguard status and configuration')
+  .action(statusCommand);
 
 program.parse();
+
+// Handle unknown commands
+if (!process.argv.slice(2).length) {
+  program.outputHelp();
+}
+
+// Global error handler
+process.on('unhandledRejection', (error) => {
+  logger.error('Unhandled error:', error.message);
+  process.exit(1);
+});

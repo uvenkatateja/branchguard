@@ -3,7 +3,7 @@ import { join, dirname } from 'path';
 
 export class ConfigManager {
   constructor() {
-    this.configDir = '.git/branch-guard';
+    this.configDir = '.git/branchguard';
     this.configPath = join(this.configDir, 'config.json');
     this.defaultConfig = {
       enabled: true,

@@ -49,9 +49,9 @@ export async function checkCommand(from, to) {
       logger.warn('💡 Recommended actions:');
       logger.dim(`   1. git fetch origin ${to}`);
       logger.dim(`   2. git rebase origin/${to}`);
-      logger.dim('   Or run: npx branch-guard sync');
+      logger.dim('   Or run: npx branchguard sync');
       logger.error('');
-      logger.dim('To force switch: BRANCH_GUARD_BYPASS=1 git checkout ' + to);
+      logger.dim('To force switch: BRANCHGUARD_BYPASS=1 git checkout ' + to);
       
       process.exit(1);
     }

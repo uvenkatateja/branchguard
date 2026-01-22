@@ -19,7 +19,7 @@ export async function statusCommand() {
 
     logger.info('');
     logger.info('═══════════════════════════════════════');
-    logger.info('        branch-guard Status');
+    logger.info('        branchguard Status');
     logger.info('═══════════════════════════════════════');
     logger.info('');
 
@@ -43,7 +43,7 @@ export async function statusCommand() {
     logger.info('');
 
     if (!hookInstalled) {
-      logger.warn('⚠ Hook not installed. Run "branch-guard init" to enable protection.');
+      logger.warn('⚠ Hook not installed. Run "branchguard init" to enable protection.');
     } else if (!config.enabled) {
       logger.warn('⚠ Protection is disabled.');
     } else {

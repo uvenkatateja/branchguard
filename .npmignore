@@ -1,0 +1,48 @@
+# Source files (we ship the built dist/)
+src/
+
+# Development files
+.vscode/
+.git/
+.gitignore
+
+# Documentation
+ARCHITECTURE.md
+FINAL-DEMO.txt
+
+# Website
+website/
+
+# Tests
+test/
+tests/
+*.test.js
+*.spec.js
+
+# Development dependencies
+node_modules/
+
+# Build artifacts
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+
+# Misc
+coverage/
+.nyc_output/

@@ -5,7 +5,7 @@ import { logger } from '../utils/logger.js';
 import { spinner } from '../utils/spinner.js';
 
 export async function safeCommand(targetBranch) {
-  const spin = spinner(`Checking safety of ${targetBranch}...`);
+  const spin = spinner(`Analyzing branch divergence...`);
   
   try {
     const gitService = new GitService();
@@ -31,17 +31,39 @@ export async function safeCommand(targetBranch) {
 
     spin.stop();
 
+    console.log('');
+    console.log(logger.chalk.dim('│'));
+    logger.info(`${logger.chalk.dim('○')}  Current branch: ${logger.chalk.cyan(currentBranch)}`);
+    console.log(logger.chalk.dim('│'));
+    logger.info(`${logger.chalk.dim('○')}  Target branch:  ${logger.chalk.cyan(targetBranch)}`);
+    console.log(logger.chalk.dim('│'));
+    console.log('');
+
     if (result.total <= threshold) {
-      logger.success(`✓ ${targetBranch} is SAFE to switch`);
-      logger.info(`  Divergence: ${result.total} commits (threshold: ${threshold})`);
+      console.log(logger.chalk.dim('│'));
+      logger.success(`${logger.chalk.dim('✓')} SAFE to switch`);
+      console.log(logger.chalk.dim('│'));
+      logger.info(`  Divergence: ${logger.chalk.green(result.total)} commits (threshold: ${threshold})`);
+      console.log(logger.chalk.dim('│'));
       logger.dim(`  Behind: ${result.behind} | Ahead: ${result.ahead}`);
+      console.log(logger.chalk.dim('│'));
     } else {
-      logger.error(`✗ ${targetBranch} is UNSAFE to switch`);
-      logger.info(`  Divergence: ${result.total} commits (threshold: ${threshold})`);
+      console.log(logger.chalk.dim('│'));
+      logger.error(`${logger.chalk.dim('✗')} UNSAFE to switch`);
+      console.log(logger.chalk.dim('│'));
+      logger.info(`  Divergence: ${logger.chalk.red(result.total)} commits (threshold: ${threshold})`);
+      console.log(logger.chalk.dim('│'));
       logger.dim(`  Behind: ${result.behind} | Ahead: ${result.ahead}`);
-      logger.warn('');
-      logger.warn('Run "branch-guard sync" to fix divergence');
+      console.log(logger.chalk.dim('│'));
+      console.log('');
+      console.log(logger.chalk.dim('│'));
+      logger.warn(`${logger.chalk.dim('*')} What to do?`);
+      console.log(logger.chalk.dim('│'));
+      console.log(logger.chalk.dim('│  ') + logger.chalk.cyan('> ') + 'Run "branchguard sync"');
+      console.log(logger.chalk.dim('│    ') + logger.chalk.dim('Or manually rebase'));
+      console.log(logger.chalk.dim('│'));
     }
+    console.log('');
     
   } catch (error) {
     spin.fail('Safety check failed');
