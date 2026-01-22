@@ -1,14 +1,14 @@
 {
   "name": "branchguard",
-  "version": "1.0.1",
+  "version": "1.0.4",
   "description": "Prevent merge conflicts by blocking dangerous branch switches",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "branchguard": "dist/index.js"
+    "branchguard": "bin/branchguard.js"
   },
   "scripts": {
-    "build": "ncc build src/cli.js -o dist",
+    "build": "ncc build src/cli.js -o dist --no-source-map-register",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
@@ -35,6 +35,7 @@
   "homepage": "https://github.com/uvenkatateja/branchguard#readme",
   "files": [
     "dist/",
+    "bin/",
     "README.md",
     "LICENSE"
   ],
