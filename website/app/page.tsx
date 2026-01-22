@@ -1,214 +1,128 @@
 'use client'
 
-import { Shield, GitBranch, Zap, CheckCircle2, XCircle, Terminal, Github } from 'lucide-react'
+import { useState } from 'react'
+import { Shield, Copy, Check, Terminal, Github } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 export default function Home() {
+  const [copied, setCopied] = useState(false)
+  const installCommand = 'npm install -g branchguard'
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(installCommand)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
-      {/* Header */}
-      <header className="container mx-auto px-4 py-6 flex justify-between items-center">
-        <div className="flex items-center gap-2">
-          <Shield className="h-8 w-8" />
-          <span className="text-2xl font-bold">branchguard</span>
-        </div>
-        <a href="https://github.com/uvenkatateja/branchguard" target="_blank" rel="noopener noreferrer">
-          <Button variant="outline" size="sm">
-            <Github className="mr-2 h-4 w-4" />
-            GitHub
-          </Button>
-        </a>
-      </header>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center">
+      {/* Main Content */}
+      <main className="container mx-auto px-4 py-12">
+        <div className="grid lg:grid-cols-2 gap-12 items-center max-w-7xl mx-auto">
+          {/* Left Side - Content */}
+          <div>
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-200 px-4 py-2 rounded-full text-sm text-blue-600 mb-6">
+              <Shield className="h-4 w-4" />
+              <span>Prevent merge conflicts</span>
+            </div>
 
-      {/* Hero */}
-      <section className="container mx-auto px-4 py-20 text-center">
-        <div className="inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-800 px-4 py-2 rounded-full text-sm mb-6">
-          <Zap className="h-4 w-4 text-yellow-500" />
-          <span>Prevent merge conflicts before they happen</span>
-        </div>
-        
-        <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-slate-900 to-slate-600 dark:from-slate-100 dark:to-slate-400 bg-clip-text text-transparent">
-          Stop wasting hours on<br />merge conflicts
-        </h1>
-        
-        <p className="text-xl text-slate-600 dark:text-slate-400 mb-8 max-w-2xl mx-auto">
-          Single npm command that blocks dangerous git checkouts when branches have diverged too much.
-        </p>
+            {/* Title */}
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-slate-900 leading-tight">
+              The CLI That Actually
+              <br />
+              <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
+                Prevents Conflicts
+              </span>
+            </h1>
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-          <Button size="lg" className="text-lg px-8">
-            <Terminal className="mr-2 h-5 w-5" />
-            npx branchguard init
-          </Button>
-          <Button size="lg" variant="outline" className="text-lg px-8">
-            View Docs
-          </Button>
-        </div>
+            {/* Description */}
+            <p className="text-xl md:text-2xl text-slate-600 mb-8 leading-relaxed">
+              Smart Git workflow protection that blocks dangerous branch switches before they cause merge conflicts
+            </p>
 
-        {/* Code Demo */}
-        <Card className="max-w-3xl mx-auto text-left bg-slate-900 dark:bg-slate-950 border-slate-800">
-          <CardContent className="p-6 font-mono text-sm">
-            <div className="space-y-2">
-              <div className="text-slate-400">$ git checkout main</div>
-              <div className="text-slate-500"># main now 47 commits ahead</div>
-              <div className="text-slate-400 mt-4">$ git checkout feature/login</div>
-              <div className="flex items-center gap-2 text-red-400 mt-2">
-                <XCircle className="h-4 w-4" />
-                <span>❌ Blocked: main has 47 divergent commits!</span>
+            {/* Links */}
+            <div className="flex flex-wrap gap-4">
+              <a 
+                href="https://www.npmjs.com/package/branchguard" 
+                target="_blank" 
+                rel="noopener noreferrer"
+              >
+                <Button variant="outline" size="lg" className="border-slate-300 text-slate-700 hover:bg-slate-100">
+                  <Terminal className="mr-2 h-5 w-5" />
+                  View on npm
+                </Button>
+              </a>
+              <a 
+                href="https://github.com/uvenkatateja/branchguard" 
+                target="_blank" 
+                rel="noopener noreferrer"
+              >
+                <Button variant="outline" size="lg" className="border-slate-300 text-slate-700 hover:bg-slate-100">
+                  <Github className="mr-2 h-5 w-5" />
+                  GitHub
+                </Button>
+              </a>
+            </div>
+          </div>
+
+          {/* Right Side - Install Command Box */}
+          <div className="lg:pl-12">
+            <div className="bg-white rounded-2xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] border border-slate-200 p-8 md:p-10">
+              <div className="mb-6">
+                <label className="text-sm font-semibold text-slate-700 mb-3 block">
+                  Install globally
+                </label>
+                <div className="relative group">
+                  <div className="bg-slate-900 rounded-lg p-4 flex items-center justify-between border-2 border-slate-800 hover:border-blue-500 transition-colors">
+                    <div className="flex items-center gap-3 flex-1 min-w-0">
+                      <Terminal className="h-5 w-5 text-blue-400 flex-shrink-0" />
+                      <code className="text-base md:text-lg text-white font-mono truncate">
+                        {installCommand}
+                      </code>
+                    </div>
+                    <Button
+                      onClick={copyToClipboard}
+                      variant="ghost"
+                      size="sm"
+                      className="ml-3 text-slate-400 hover:text-white hover:bg-slate-800 flex-shrink-0"
+                    >
+                      {copied ? (
+                        <Check className="h-5 w-5 text-green-400" />
+                      ) : (
+                        <Copy className="h-5 w-5" />
+                      )}
+                    </Button>
+                  </div>
+                </div>
               </div>
-              <div className="text-yellow-400 mt-2">💡 Recommendation:</div>
-              <div className="text-slate-500 ml-4">git pull origin main</div>
-              <div className="text-slate-500 ml-4">git rebase main</div>
-              <div className="text-slate-400 mt-4">$ npx branchguard sync</div>
-              <div className="flex items-center gap-2 text-green-400 mt-2">
-                <CheckCircle2 className="h-4 w-4" />
-                <span>✅ Branch synced successfully!</span>
+
+              <div className="border-t border-slate-200 pt-6">
+                <label className="text-sm font-semibold text-slate-700 mb-3 block">
+                  Quick start
+                </label>
+                <div className="space-y-3">
+                  <div className="bg-slate-50 rounded-lg p-3 border border-slate-200">
+                    <code className="text-sm text-slate-700 font-mono">
+                      branchguard init
+                    </code>
+                  </div>
+                  <div className="bg-slate-50 rounded-lg p-3 border border-slate-200">
+                    <code className="text-sm text-slate-700 font-mono">
+                      branchguard safe main
+                    </code>
+                  </div>
+                  <div className="bg-slate-50 rounded-lg p-3 border border-slate-200">
+                    <code className="text-sm text-slate-700 font-mono">
+                      branchguard sync
+                    </code>
+                  </div>
+                </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
-      </section>
-
-      {/* Problem Section */}
-      <section className="container mx-auto px-4 py-20">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-            The Daily Dev Reality
-          </h2>
-          
-          <Card className="bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-900">
-            <CardHeader>
-              <CardTitle className="text-red-900 dark:text-red-400">Without branch-guard</CardTitle>
-            </CardHeader>
-            <CardContent className="font-mono text-sm space-y-2">
-              <div>$ git checkout main <span className="text-slate-500"># main now 47 commits ahead</span></div>
-              <div>$ git checkout feature/login <span className="text-slate-500"># divergent history created</span></div>
-              <div className="text-slate-500">*2 days coding → 20 commits*</div>
-              <div>$ git checkout main <span className="text-slate-500"># main now 52 commits ahead!</span></div>
-              <div>$ git merge feature/login <span className="text-red-600"># 💥 15+ files conflict hell (2hrs wasted)</span></div>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
-
-      {/* Features */}
-      <section className="container mx-auto px-4 py-20">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-          How It Works
-        </h2>
-        
-        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          <Card>
-            <CardHeader>
-              <GitBranch className="h-10 w-10 mb-4 text-blue-500" />
-              <CardTitle>Divergence Detection</CardTitle>
-              <CardDescription>
-                Uses git rev-list to calculate exact commit divergence between branches
-              </CardDescription>
-            </CardHeader>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <Shield className="h-10 w-10 mb-4 text-green-500" />
-              <CardTitle>Smart Threshold</CardTitle>
-              <CardDescription>
-                Blocks switches when branches differ by more than 10 commits (configurable)
-              </CardDescription>
-            </CardHeader>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <Zap className="h-10 w-10 mb-4 text-yellow-500" />
-              <CardTitle>Auto-Recovery</CardTitle>
-              <CardDescription>
-                Provides exact commands to fix divergence or auto-sync with one command
-              </CardDescription>
-            </CardHeader>
-          </Card>
-        </div>
-      </section>
-
-      {/* Commands */}
-      <section className="container mx-auto px-4 py-20 bg-slate-50 dark:bg-slate-900/50">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-            Simple Commands
-          </h2>
-          
-          <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="font-mono text-lg">branchguard init</CardTitle>
-                <CardDescription>Install once, protected forever</CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="font-mono text-lg">branchguard safe &lt;branch&gt;</CardTitle>
-                <CardDescription>Check if switching to a branch is safe</CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="font-mono text-lg">branchguard sync</CardTitle>
-                <CardDescription>Auto-rebase current branch with main</CardDescription>
-              </CardHeader>
-            </Card>
           </div>
         </div>
-      </section>
-
-      {/* Stats */}
-      <section className="container mx-auto px-4 py-20">
-        <div className="grid md:grid-cols-4 gap-8 max-w-5xl mx-auto text-center">
-          <div>
-            <div className="text-4xl font-bold mb-2">20+</div>
-            <div className="text-slate-600 dark:text-slate-400">Branch switches/day</div>
-          </div>
-          <div>
-            <div className="text-4xl font-bold mb-2">30%</div>
-            <div className="text-slate-600 dark:text-slate-400">Conflict rate</div>
-          </div>
-          <div>
-            <div className="text-4xl font-bold mb-2">2hrs</div>
-            <div className="text-slate-600 dark:text-slate-400">Saved per week</div>
-          </div>
-          <div>
-            <div className="text-4xl font-bold mb-2">100%</div>
-            <div className="text-slate-600 dark:text-slate-400">Teams affected</div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="container mx-auto px-4 py-20">
-        <Card className="max-w-3xl mx-auto text-center bg-gradient-to-r from-slate-900 to-slate-700 dark:from-slate-800 dark:to-slate-900 border-0">
-          <CardHeader className="space-y-6 pb-8">
-            <CardTitle className="text-3xl md:text-4xl text-white">
-              Ready to stop wasting time?
-            </CardTitle>
-            <CardDescription className="text-slate-300 text-lg">
-              Install branch-guard in 30 seconds and never deal with preventable merge conflicts again.
-            </CardDescription>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-              <Button size="lg" variant="secondary" className="text-lg px-8">
-                <Terminal className="mr-2 h-5 w-5" />
-                npm install -g branchguard
-              </Button>
-            </div>
-          </CardHeader>
-        </Card>
-      </section>
-
-      {/* Footer */}
-      <footer className="container mx-auto px-4 py-8 text-center text-slate-600 dark:text-slate-400 border-t">
-        <p>MIT License • Built for developers who value their time</p>
-      </footer>
+      </main>
     </div>
   )
 }
