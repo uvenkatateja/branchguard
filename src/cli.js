@@ -53,8 +53,9 @@ program
 
 program.parse();
 
-// Handle unknown commands
+// Handle no command - show banner and help
 if (!process.argv.slice(2).length) {
+  showBanner();
   program.outputHelp();
 }
 
